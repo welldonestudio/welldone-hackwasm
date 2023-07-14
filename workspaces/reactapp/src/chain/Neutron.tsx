@@ -11,6 +11,29 @@ import VerifyIcon from "@mui/icons-material/Verified";
 import JSZip from "jszip";
 import { DataGrid } from '@mui/x-data-grid';
 import FileViewer from '../FileViewer';
+import { makeStyles } from '@mui/styles';
+import CircularProgress from '@mui/material/CircularProgress';
+
+const useStyles = makeStyles((theme) => ({
+    overlay: {
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        width: '100%',
+        height: '100%',
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+        zIndex: 9999,
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    loadingMessage: {
+        color: '#ffffff',
+        fontSize: '2em',
+        textAlign: 'center',
+    },
+}));
+
 
 const HeaderTypography = styled(Typography)(({ theme }) => ({
     borderBottom: `4px solid`,
@@ -25,6 +48,9 @@ function Neutron() {
     const [selectedData, setSelectedData] = useState(null);
     const [verificationResult, setVerificationResult] = useState<any>(null);
 
+    const classes = useStyles();
+    const [isLoading, setIsLoading] = useState(false);
+
     useEffect(() => {
         const fetchData = async () => {
             const result = await axios(
@@ -37,7 +63,9 @@ function Neutron() {
     }, []);
 
     const handleRowClick = async (param: any) => {
+        setIsLoading(true)
         setSelectedData(param.row);
+
         try {
             const response = await axios.post(
                 'https://prod.neutron.compiler.welldonestudio.io/verification/neutron',
@@ -65,8 +93,10 @@ function Neutron() {
             }
             setVerificationResult(response.data);
             console.log(response.data)
+            setIsLoading(false)
         } catch (err) {
             console.error(err);
+            setIsLoading(false)
         }
     };
 
@@ -118,13 +148,22 @@ function Neutron() {
                     <div>
                         {verificationResult.isVerified ? (
                             <div>
-                                <h2>Verification Successful</h2>
-                                <p>{verificationResult.srcUrl}</p>
+                                <h2><span style={{ color: 'green' }}>✓ </span>Verification Successful</h2>
+                                <Box mb={3}>
+                                    <p>Code Id(DB): {verificationResult.historyCodeId}</p>
+                                    <p>Code Id(OnChain): {verificationResult.onchainCodeId}</p>
+                                    <p>Immutable: {verificationResult.isImmutable ? 'Yes' : 'No(This is upgradable)'}</p>
+                                </Box>
                             </div>
                         ) : (
                             <div>
-                                <h2>Verification Failed</h2>
+                                <h2><span style={{ color: 'red' }}>✗ </span>Verification Failed</h2>
                                 <p>{verificationResult.errMsg}</p>
+                                <Box mb={3}>
+                                    <p>CodeId (DB): {verificationResult.historyCodeId}</p>
+                                    <p>CodeId (OnChain): {verificationResult.onchainCodeId}</p>
+                                    <p>isImmutable: {verificationResult.isImmutable ? 'Yes' : 'No (This is upgradable)'}</p>
+                                </Box>
                             </div>
                         )}
                     </div>
@@ -165,6 +204,7 @@ function Neutron() {
                         handleRowClick={handleRowClick}
                     />
                 </Box>
+
                 <Box mb={3}>
                     <div>
                         <div>
@@ -190,6 +230,15 @@ function Neutron() {
 
                 </Box>
             </Box>
+            {isLoading && (
+                <div className={classes.overlay}>
+                    <div className={classes.loadingMessage}>
+                        <CircularProgress color="inherit" />
+                        <p>Verifying...</p>
+                    </div>
+                </div>
+            )}
+
         </Container>
     );
 }
