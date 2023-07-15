@@ -2,9 +2,9 @@ import { Column, Entity, PrimaryColumn } from 'typeorm';
 import {
   ENV_NEUTRON_BUILD_SCRIPT,
   ENV_NEUTRON_OPTIMIZER_SCRIPT,
-  OS_MACHINE,
 } from 'src/neutron-deploy-history/script';
 import { NeutronDeployHistoryCreateVo } from 'src/neutron-deploy-history/vo/neutron-deploy-history.create.vo';
+import { OS_MACHINE } from 'src/const/build-env';
 
 @Entity('neutron_deploy_history')
 export class NeutronDeployHistory {

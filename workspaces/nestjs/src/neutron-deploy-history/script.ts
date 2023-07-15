@@ -1,9 +1,4 @@
-import * as os from 'os';
-
-const OS_PLATFORM = process.platform;
-export const OS_MACHINE = os.machine();
-
-const OS_PLATFORM_DARWIN = 'darwin';
+import { OS_PLATFORM, OS_PLATFORM_DARWIN } from 'src/const/build-env';
 
 const RUST_OPTIMIZER_IMG_DARWIN = 'cosmwasm/rust-optimizer-arm64:0.12.11';
 const RUST_OPTIMIZER_IMG_LINUX = 'cosmwasm/rust-optimizer:0.12.11';
