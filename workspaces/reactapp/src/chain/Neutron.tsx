@@ -230,6 +230,36 @@ function Neutron() {
                         Neutron Smart Contract Verification API is a platform for verifying CosmWasm smart contracts deployed on Remix IDE. <br />Our principle is simple: <strong>'Don't trust, verify'.</strong></Typography>
                 </Box>
                 <Box mb={3}>
+                    <Typography variant="h6" gutterBottom>
+                        User Manual
+                    </Typography>
+                    <Typography variant="body1">
+                        <ul>
+                            <li style={{
+                                marginBottom: '10px',
+                                fontSize: '16px',
+                                lineHeight: '1.5'
+                            }}>Refer to the <a href="https://docs.welldonestudio.io/code/deploy-and-run/neutron" target="_blank">Manual</a> to write and compile your contract, then proceed with the deployment. The process of contract creation and compilation can be complex, so handle it with care.</li>
+                            <li style={{
+                                marginBottom: '10px',
+                                fontSize: '16px',
+                                lineHeight: '1.5'
+                            }}>Once the contract is compiled and deployed, it will automatically be stored in the database and will appear on this page's list.</li>
+                            <li style={{
+                                marginBottom: '10px',
+                                fontSize: '16px',
+                                lineHeight: '1.5'
+                            }}>By clicking on a specific contract address in the table below, you can verify the contract by comparing the code id and checksum stored in the DB with the code id and checksum on-chain. This step is crucial for confirming the integrity of the contract.</li>
+                            <li style={{
+                                marginBottom: '10px',
+                                fontSize: '16px',
+                                lineHeight: '1.5'
+                            }}>While we do provide the verification feature directly, a key point is that we offer information about the Rust build environment to allow anyone to verify contracts. Given that Rust's build results are non-deterministic when compiling into wasm, the provision of this build environment information becomes especially important. This information will allow developers to definitively ascertain if the contract is functioning as expected.</li>
+
+                        </ul>
+                    </Typography>
+                </Box>
+                <Box mb={3}>
                     <DataTable
                         data={data}
                         setData={setData}
@@ -241,16 +271,18 @@ function Neutron() {
                     />
                 </Box>
             </Box>
-            {isLoading && (
-                <div className={classes.overlay}>
-                    <div className={classes.loadingMessage}>
-                        <CircularProgress color="inherit" />
-                        <p>Verifying...</p>
+            {
+                isLoading && (
+                    <div className={classes.overlay}>
+                        <div className={classes.loadingMessage}>
+                            <CircularProgress color="inherit" />
+                            <p>Verifying...</p>
+                        </div>
                     </div>
-                </div>
-            )}
+                )
+            }
 
-        </Container>
+        </Container >
     );
 }
 
