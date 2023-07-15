@@ -57,6 +57,7 @@ function Neutron() {
                 'https://api.welldonestudio.io/compiler/neutron-deploy-histories?chainId=testnet&offset=0&fetchSize=50',
             );
 
+            console.log(result.data)
             setData(result.data.reverse());
         };
         fetchData();
@@ -143,16 +144,45 @@ function Neutron() {
 
         return (
             <div style={{ width: '100%' }}>
-                <DataGrid rows={data} columns={columns as any} onRowClick={handleRowClick} />
+                <DataGrid rows={data} columns={columns as any} onRowClick={handleRowClick} initialState={{
+                    pagination: {
+                        paginationModel: {
+                            pageSize: 5,
+                        },
+                    },
+                }}
+                    pageSizeOptions={[5]} />
                 {verificationResult && (
                     <div>
                         {verificationResult.isVerified ? (
                             <div>
                                 <h2><span style={{ color: 'green' }}>✓ </span>Verification Successful</h2>
                                 <Box mb={3}>
-                                    <p>Code Id(DB): {verificationResult.historyCodeId}</p>
-                                    <p>Code Id(OnChain): {verificationResult.onchainCodeId}</p>
-                                    <p>Immutable: {verificationResult.isImmutable ? 'Yes' : 'No(This is upgradable)'}</p>
+                                    <p>isImmutable: {verificationResult.isImmutable ? 'Yes' : <>No <span style={{ color: 'red' }}>(This is upgradable)</span></>}</p>
+                                </Box>
+                                <Box mb={3}>
+                                    <div>
+                                        <div>
+                                            {unzippedFiles.map((file: any, index: any) => (
+                                                <button
+                                                    type="button"
+                                                    key={index}
+                                                    onClick={(event) => {
+                                                        event.preventDefault();
+                                                        setActiveTab(index);
+                                                    }}
+                                                >
+                                                    {file.name}
+                                                </button>
+                                            ))}
+                                        </div>
+
+                                        <div>
+                                            <h3>{unzippedFiles[activeTab]?.name}</h3>
+                                            <FileViewer code={unzippedFiles[activeTab]?.content} />
+                                        </div>
+                                    </div>
+
                                 </Box>
                             </div>
                         ) : (
@@ -160,9 +190,7 @@ function Neutron() {
                                 <h2><span style={{ color: 'red' }}>✗ </span>Verification Failed</h2>
                                 <p>{verificationResult.errMsg}</p>
                                 <Box mb={3}>
-                                    <p>CodeId (DB): {verificationResult.historyCodeId}</p>
-                                    <p>CodeId (OnChain): {verificationResult.onchainCodeId}</p>
-                                    <p>isImmutable: {verificationResult.isImmutable ? 'Yes' : 'No (This is upgradable)'}</p>
+                                    <p>isImmutable: {verificationResult.isImmutable ? 'Yes' : <>No <span style={{ color: 'red' }}>(This is upgradable)</span></>}</p>
                                 </Box>
                             </div>
                         )}
@@ -181,7 +209,7 @@ function Neutron() {
                     </Grid>
                     <Grid item>
                         <Box component="h1">
-                            <HeaderTypography variant="h4">Neutron Smart Contract Verification API</HeaderTypography>
+                            <HeaderTypography variant="h4">Neutron Smart Contract Verification Service</HeaderTypography>
                         </Box>
                     </Grid>
                 </Grid>
@@ -203,31 +231,6 @@ function Neutron() {
                         setVerificationResult={setVerificationResult}
                         handleRowClick={handleRowClick}
                     />
-                </Box>
-
-                <Box mb={3}>
-                    <div>
-                        <div>
-                            {unzippedFiles.map((file: any, index: any) => (
-                                <button
-                                    type="button"
-                                    key={index}
-                                    onClick={(event) => {
-                                        event.preventDefault();
-                                        setActiveTab(index);
-                                    }}
-                                >
-                                    {file.name}
-                                </button>
-                            ))}
-                        </div>
-
-                        <div>
-                            <h3>{unzippedFiles[activeTab]?.name}</h3>
-                            <FileViewer code={unzippedFiles[activeTab]?.content} />
-                        </div>
-                    </div>
-
                 </Box>
             </Box>
             {isLoading && (

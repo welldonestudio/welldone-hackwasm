@@ -35,8 +35,8 @@ function App() {
             indicatorColor="secondary"
             centered
           >
-            <LinkTab label="Neutron" to="/neutron" value="/neutron" />
-            <LinkTab label="Juno" to="/juno" value="/juno" />
+            <LinkTab label={<><img src="/assets/Neutron-Big.svg" alt="Neutron" /></>} to="/neutron" value="/neutron" />
+            <LinkTab label={<><img src="/assets/Juno-Big.png" alt="Juno" /></>} to="/juno" value="/juno" />
           </Tabs>
         </AppBar>
         <Box sx={{ p: 3 }}>
