@@ -14,7 +14,8 @@
     "build:app": "yarn workspace @monorepo/reactapp build",
     "build:api": "yarn workspace @monorepo/nestjs build",
     "start:app": "yarn workspace @monorepo/reactapp start",
-    "start:api": "yarn workspace @monorepo/nestjs start"
+    "start:api": "yarn workspace @monorepo/nestjs start",
+    "start:api:dev": "yarn workspace @monorepo/nestjs start:dev"
   },
   "keywords": [
     "nestjs",
