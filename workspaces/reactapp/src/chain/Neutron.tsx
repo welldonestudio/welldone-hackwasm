@@ -54,7 +54,7 @@ function Neutron() {
     useEffect(() => {
         const fetchData = async () => {
             const result = await axios(
-                'https://api.welldonestudio.io/compiler/neutron-deploy-histories?chainId=testnet&offset=0&fetchSize=50',
+                'https://prod.neutron.compiler.welldonestudio.io/neutron-deploy-histories?chainId=testnet&offset=0&fetchSize=50',
             );
 
             console.log(result.data)
@@ -137,21 +137,24 @@ function Neutron() {
         const columns = [
             { field: 'contractAddress', headerName: 'Contract Address', width: '450', headerAlign: 'center', align: 'center' },
             { field: 'envOsName', headerName: 'OS', width: '150', headerAlign: 'center', align: 'center' },
-            { field: 'envOsVersion', headerName: 'OS Version', width: '150', headerAlign: 'center', align: 'center' },
-            { field: 'envRustcVersion', headerName: 'Rust Version', width: '150', headerAlign: 'center', align: 'center' },
-            { field: 'envCargoWasmVersion', headerName: 'Cargo Version', width: '150', headerAlign: 'center', align: 'center' },
+            { field: 'envOsVersion', headerName: 'OS Version', width: '120', headerAlign: 'center', align: 'center' },
+            { field: 'envRustcVersion', headerName: 'Rust Version', width: '120', headerAlign: 'center', align: 'center' },
+            { field: 'envCargoWasmVersion', headerName: 'Cargo Version', width: '120', headerAlign: 'center', align: 'center' },
+            { field: 'envOsMachine', headerName: 'Machine', width: '150', headerAlign: 'center', align: 'center' },
         ];
 
         return (
             <div style={{ width: '100%' }}>
-                <DataGrid rows={data} columns={columns as any} onRowClick={handleRowClick} initialState={{
-                    pagination: {
-                        paginationModel: {
-                            pageSize: 5,
+                <DataGrid rows={data} columns={columns as any} onRowClick={handleRowClick}
+                    initialState={{
+                        pagination: {
+                            paginationModel: {
+                                pageSize: 5,
+                            },
                         },
-                    },
-                }}
-                    pageSizeOptions={[5]} />
+                    }}
+                    pageSizeOptions={[5]}
+                />
                 {verificationResult && (
                     <div>
                         {verificationResult.isVerified ? (
@@ -160,6 +163,11 @@ function Neutron() {
                                 <Box mb={3}>
                                     <p>isImmutable: {verificationResult.isImmutable ? 'Yes' : <>No <span style={{ color: 'red' }}>(This is upgradable)</span></>}</p>
                                 </Box>
+                                <Box mb={3}>
+                                    <h3>Build & Optimize Script</h3>
+                                    <FileViewer code={'> ' + verificationResult?.envBuildScript + '\n' + '> ' + verificationResult?.envOptimizerScript} />
+                                </Box>
+
                                 <Box mb={3}>
                                     <div>
                                         <div>
